@@ -27,7 +27,7 @@ $(function() {
       range: window.range,
       pips: {
         mode: 'steps',
-        density: 1
+        density: 2
       },
       format: {
         to: function(value) {
