@@ -45,7 +45,12 @@ $(function() {
       window.max = values[1];
       renderData();
 
-      $('#sliderValues').html("<div id=\"sliderValues\">"+ window.max + "-July-2016</div>");
+      var sliderValuesInner = window.max + ", July, 2016";
+      if (window.min != window.max){
+        sliderValuesInner = window.min +" - " + sliderValuesInner;
+      }
+      var sliderValuesHtml = "<div id=\"sliderValues\">" + sliderValuesInner + "</div>";
+      $('#sliderValues').html(sliderValuesHtml);
     });
     
   }
