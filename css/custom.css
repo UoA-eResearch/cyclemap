@@ -29,3 +29,9 @@ html, body, #timemap, #map {
 .dataTable tbody tr {
   cursor: pointer;
 }
+
+.play {
+  float: left;
+  margin-top: 10px;
+  margin-left: 0px;
+}
