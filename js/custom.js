@@ -44,6 +44,8 @@ $(function() {
       window.min = values[0];
       window.max = values[1];
       renderData();
+
+      $('#sliderValues').html("<div id=\"sliderValues\">"+ window.max + "-July-2016</div>");
     });
     
   }
