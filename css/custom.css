@@ -33,4 +33,5 @@ html, body, #timemap, #map {
 .play {
   float: left;
   margin-top: 10px;
+  margin-left: 0px;
 }
