@@ -59,7 +59,7 @@ $(function() {
       window.t = setInterval(function() {
         if (window.range['max'] == window.max) {
           window.min = 0;
-          window.max = window.min // go back to start
+          window.max = window.min + 1; // go back to start
         }
         window.slider.noUiSlider.set([window.min+1, window.max+1]);
       }, 1000);
