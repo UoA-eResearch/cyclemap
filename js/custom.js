@@ -80,11 +80,68 @@ $(function() {
       renderData();
 
       var sliderValuesInner = window.max + ", July, 2016";
-      
+
+      //test 2 generating html based off slider temperatures and month temperature
+
+      //icon string holder
+      iconName = "";
+      isAboveAvg = false;
+
+      //if sliders same
+      if (window.min == window.max){
+        console.log("sliders same value");
+        //if array value at index slider > month average
+        if (dayAvgTempList[window.max] >= monthAvgTemp) {
+          //set aboveavg to true
+          isAboveAvg = true;
+        }
+        //else
+        else {
+          //set above avg to false
+          isAboveAvg = false;
+        }
+      }
+      //if sliders different
+      else {
+        console.log("sliders different")
+        //declare sum holder
+        rangeSum = 0;
+        //loop from the min slider to max slider (inclusive). Offset -1
+        for (i =  window.min -1; i <= window.max-1; i++) {
+          //cumulative add to the rangeSum
+          rangeSum += dayAvgTempList[i];
+        }
+        //divide Sum by the window.max - (window.min -1) to include the window.min slider
+        rangeAvg = rangeSum / (window.max - (window.min -1));
+        rangeAvg = Math.round(rangeAvg * 10) / 10;
+        console.log("range average: " + rangeAvg);
+        console.log("MONTH average: " + monthAvgTemp);
+        //if range avg > monthly then icon = sun or aboveAvg = true;
+        if (rangeAvg > monthAvgTemp) {
+          isAboveAvg = true;
+        }
+        else {
+          isAboveAvg = false;
+        }
+      }
+
+      if (isAboveAvg) {
+        iconName = "sun.svg"
+      }
+      else {
+        iconName = "cloud-drizzle.svg"
+      }
+
+      //make the innerHTML string for icon
+      weatherIconInner = "<img src=\"assets/icons/"+ iconName +"\"/>";
+      //populate the HTML tag with the HTML string
+      $('.weather-icon').html(weatherIconInner);
+
+      //test 2 end...
+
       if (window.min != window.max){
         sliderValuesInner = window.min + " - " + sliderValuesInner;
       }
-
       var sliderValuesHtml = "<div id=\"sliderValues\">" + sliderValuesInner + "</div>";
       $('#sliderValues').html(sliderValuesHtml);
     });
