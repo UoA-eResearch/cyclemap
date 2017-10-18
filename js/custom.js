@@ -38,6 +38,40 @@ $(function() {
         }
       }
     });
+
+    //Test 1 start
+    //Declaring the variables outside anonymous function for use by update function
+    dayAvgTempList = [];
+    monthAvgTemp = 0;
+
+    $.get("data/july-2016-auckland-weather-data.csv", function (data) {
+      data = $.csv.toObjects(data);
+
+      
+
+      //loop through the data
+      for (day in data) {
+        daySum = 0;
+        //loop through the fields 1-9
+        for (var prop in data[day]) {
+          //making sure property is one of the hi's or lo's
+          if (data[day].hasOwnProperty(prop) && prop != "day") {
+            daySum += parseInt(data[day][prop]);
+          }
+        }
+        //average the daySum
+        daySum = daySum/8;
+        monthAvgTemp += daySum;
+        daySum = Math.round(daySum * 10) / 10;
+        //push the daySum to a new array
+        dayAvgTempList.push(daySum);
+      }
+      monthAvgTemp = Math.round((monthAvgTemp / data.length) * 10) / 10;
+      console.log("month average temp: " + monthAvgTemp);
+      console.log(dayAvgTempList);
+           
+    });  
+    //Test 1 end
     
     window.slider.noUiSlider.on('update', function() {
       var values = this.get();
@@ -46,9 +80,11 @@ $(function() {
       renderData();
 
       var sliderValuesInner = window.max + ", July, 2016";
+      
       if (window.min != window.max){
-        sliderValuesInner = window.min +" - " + sliderValuesInner;
+        sliderValuesInner = window.min + " - " + sliderValuesInner;
       }
+
       var sliderValuesHtml = "<div id=\"sliderValues\">" + sliderValuesInner + "</div>";
       $('#sliderValues').html(sliderValuesHtml);
     });
@@ -129,9 +165,9 @@ $(function() {
   function renderData() {
     if (!window.data) return;
     console.log('rendering');
-    var sum = {}
+    var daySum = {}
     for (var l in lines) {
-      sum[l] = 0;
+      daySum[l] = 0;
     }
     for (var i in window.data) {
       var e = window.data[i];
@@ -141,13 +177,13 @@ $(function() {
           if (place != 'Date') {
             var amt = parseInt(e[place]);
             if (isNaN(amt)) continue;
-            sum[place] += amt;
+            daySum[place] += amt;
           }
         }
       }
     }
-    for (var place in sum) {
-      var amt = sum[place];
+    for (var place in daySum) {
+      var amt = daySum[place];
       lines[place].setOptions({strokeWeight: amt / 300});
       lines[place].infowindow.setContent(place + ': ' + amt);
     }

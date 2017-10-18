@@ -40,3 +40,8 @@ html, body, #timemap, #map {
   padding-top: .5rem;
   font-weight: bold;
 }
+
+.weather-icon {
+  padding-top: .5rem;
+  font-weight: bold;
+}
