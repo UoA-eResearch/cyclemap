@@ -40,3 +40,14 @@ html, body, #timemap, #map {
   padding-top: .5rem;
   font-weight: bold;
 }
+
+.weather-icon {
+  padding-top: .2rem;
+  font-weight: bold;
+}
+
+.weather-data {
+  display: inline-block;
+  text-align: left;
+  padding-bottom: .3rem;
+}

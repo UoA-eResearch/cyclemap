@@ -17,7 +17,30 @@ $(function() {
   
   window.min = 0;
   window.max = 30;
-  
+
+  //Generating the daily temperatures array and month average value
+  dayAvgTempList = [];
+  monthAvgTemp = 0;
+
+  $.get("data/july-2016-auckland-weather-data.csv", function (data) {
+    data = $.csv.toObjects(data);
+    for (day in data) {
+      daySum = 0;
+      for (var prop in data[day]) {
+        if (data[day].hasOwnProperty(prop) && prop != "day") {
+          daySum += parseInt(data[day][prop]);
+        }
+      }
+      daySum = daySum/8;
+      monthAvgTemp += daySum;
+      daySum = Math.round(daySum * 10) / 10;
+      dayAvgTempList.push(daySum);
+    }
+    monthAvgTemp = Math.round((monthAvgTemp / data.length) * 10) / 10;
+    console.log("month average temp: " + monthAvgTemp);
+    console.log(dayAvgTempList);
+  });
+
   function createSlider() {
     noUiSlider.create(window.slider, {
       start: [ window.range.min, window.range.min+1 ],
@@ -46,21 +69,63 @@ $(function() {
       renderData();
 
       var sliderValuesInner = window.max + ", July, 2016";
-      if (window.min != window.max){
-        sliderValuesInner = window.min +" - " + sliderValuesInner;
+      var iconName = "";
+      var isAboveAvg = false;
+      var rangeAvg = 0;
+
+      if (window.min == window.max){
+        rangeAvg = dayAvgTempList[window.min-1];
+        rangeAvg = Math.round(rangeAvg * 10) / 10;
+        if (rangeAvg >= monthAvgTemp) {
+          isAboveAvg = true;
+        }
+        else {
+          isAboveAvg = false;
+        }
       }
+      else {
+        rangeSum = 0;
+        //loop from the min slider to max slider (inclusive). Offset -1
+        for (i =  window.min -1; i <= window.max-1; i++) {
+          rangeSum += dayAvgTempList[i];
+        }
+        //divide Sum by the window.max - (window.min -1) to include the window.min slider
+        rangeAvg = rangeSum / (window.max - (window.min -1));
+        rangeAvg = Math.round(rangeAvg * 10) / 10;
+        if (rangeAvg > monthAvgTemp) {
+          isAboveAvg = true;
+        }
+        else {
+          isAboveAvg = false;
+        }
+        sliderValuesInner = window.min + " - " + sliderValuesInner;
+      }
+      if (isAboveAvg) {
+        iconName = "sun.svg"
+      }
+      else {
+        iconName = "cloud-drizzle.svg"
+      }
+      //Populating the weather tag
+      weatherIconInner = "Weather: "+ rangeAvg + " &deg;C <img src=\"assets/icons/"+ iconName +"\"/>";
+      $('.weather-icon').html(weatherIconInner);
+      //test 2 end...
       var sliderValuesHtml = "<div id=\"sliderValues\">" + sliderValuesInner + "</div>";
       $('#sliderValues').html(sliderValuesHtml);
     });
-    
   }
+
   $('.play').click(function() {
     if (!window.t) {
       window.t = setInterval(function() {
         if (window.range['max'] == window.max) {
-          window.max = window.min // go back to start
+          window.min = 0;
+          window.max = window.min + 1; // go back to start
+          clearInterval(window.t);
+          window.t = false;
+          $('.play i').text('play_arrow');
         }
-        window.slider.noUiSlider.set([null, window.max+1]);
+        window.slider.noUiSlider.set([window.min+1, window.max+1]);
       }, 1000);
       $('.play i').text('pause');
     } else {
@@ -144,7 +209,7 @@ $(function() {
     }
     for (var place in sum) {
       var amt = sum[place];
-      lines[place].setOptions({strokeWeight: amt / 1000});
+      lines[place].setOptions({strokeWeight: amt / 300});
       lines[place].infowindow.setContent(place + ': ' + amt);
     }
   }
