@@ -191,9 +191,9 @@ $(function() {
   function renderData() {
     if (!window.data) return;
     console.log('rendering');
-    var daySum = {}
+    var sum = {}
     for (var l in lines) {
-      daySum[l] = 0;
+      sum[l] = 0;
     }
     for (var i in window.data) {
       var e = window.data[i];
@@ -203,13 +203,13 @@ $(function() {
           if (place != 'Date') {
             var amt = parseInt(e[place]);
             if (isNaN(amt)) continue;
-            daySum[place] += amt;
+            sum[place] += amt;
           }
         }
       }
     }
-    for (var place in daySum) {
-      var amt = daySum[place];
+    for (var place in sum) {
+      var amt = sum[place];
       lines[place].setOptions({strokeWeight: amt / 300});
       lines[place].infowindow.setContent(place + ': ' + amt);
     }
