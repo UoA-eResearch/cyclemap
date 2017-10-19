@@ -106,7 +106,6 @@ $(function() {
       else {
         iconName = "cloud-drizzle.svg"
       }
-
       //Populating the weather tag
       weatherIconInner = "Weather: "+ rangeAvg + " &deg;C <img src=\"assets/icons/"+ iconName +"\"/>";
       $('.weather-icon').html(weatherIconInner);
@@ -118,7 +117,7 @@ $(function() {
 
   $('.play').click(function() {
     if (!window.t) {
-      window.t = setInterval(function () {
+      window.t = setInterval(function() {
         if (window.range['max'] == window.max) {
           window.min = 0;
           window.max = window.min + 1; // go back to start
